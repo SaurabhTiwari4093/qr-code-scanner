@@ -11,7 +11,10 @@ function docReady(fn) {
 
 const qrScanApi = async (data) => {
     if (data.eventName === '') {
-        alert("Please choose eventName")
+        swal({
+            title: "Event is not selected",
+            icon: "info",
+        })
     }
     else {
         try {
@@ -32,10 +35,16 @@ const qrScanApi = async (data) => {
                 .then((data) => {
                     console.log(data)
                     if (data.status === 200) {
-                        alert(data.message);
+                        swal({
+                            title: data.message,
+                            icon: "success",
+                        })
                     }
                     else {
-                        alert(data.message);
+                        swal({
+                            title: data.message,
+                            icon: "error",
+                        })
                     }
                 })
         }
