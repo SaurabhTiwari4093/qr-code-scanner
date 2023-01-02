@@ -66,7 +66,7 @@ docReady(function () {
             console.log(`Scan result ${decodedText}`, decodedResult);
             const requestData = {
                 eventName: "InaugrationSession",
-                studentEmail: "saurabhtiwari4093@gmail.com"
+                studentEmail: decodedText
             }
             qrScanApi(requestData);
         }
