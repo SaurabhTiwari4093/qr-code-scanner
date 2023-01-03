@@ -16,12 +16,19 @@
     <!-- Favicons -->
     <link href="assets/img/favicon.ico" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
     <main>
-        <div id="qr-reader" style="width:500px"></div>
-        <div id="qr-reader-results"></div>
+        <div class="row d-flex justify-content-center py-5">
+            <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+                <div id="qr-reader"></div>
+                <div id="qr-reader-results"></div>
+            </div>
+        </div>
     </main>
 
     <script src="assets/js/sweetalert.min.js"></script>
