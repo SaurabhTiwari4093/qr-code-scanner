@@ -9,11 +9,19 @@ function docReady(fn) {
     }
 }
 
+const showLoader=document.getElementById('showLoader');
+const showScanner=document.getElementById('showScanner');
+
 const qrScanApi = async (data) => {
+    showLoader.style.display='flex';
+    showScanner.style.display='none';
     if (data.eventName === '') {
+        showLoader.style.display='none'
         swal({
             title: "Event is not selected",
             icon: "info",
+        }).then(()=>{
+            showScanner.style.display='grid';
         })
     }
     else {
@@ -35,15 +43,21 @@ const qrScanApi = async (data) => {
                 .then((data) => {
                     console.log(data)
                     if (data.status === 200) {
+                        showLoader.style.display='none'
                         swal({
                             title: data.message,
                             icon: "success",
+                        }).then(()=>{
+                            showScanner.style.display='grid';
                         })
                     }
                     else {
+                        showLoader.style.display='none'
                         swal({
                             title: data.message,
                             icon: "error",
+                        }).then(()=>{
+                            showScanner.style.display='grid';
                         })
                     }
                 })
