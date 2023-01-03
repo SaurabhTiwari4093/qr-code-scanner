@@ -19,14 +19,20 @@
 
     <!-- CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
 
 <body>
     <main>
+        <div id="showLoader">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div class="row d-flex justify-content-center py-5">
-            <div class="col-10 col-sm-6 col-md-4 col-lg-3">
-                <div id="qr-reader"></div>
-                <div id="qr-reader-results"></div>
+            <div class="col-11 col-sm-6 col-md-4">
+                    <div id="qr-reader"></div>
+                    <div id="qr-reader-results"></div>
             </div>
         </div>
     </main>
