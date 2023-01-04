@@ -10,10 +10,11 @@ function docReady(fn) {
 }
 
 const showLoader = document.getElementById('showLoader');
+const eventNameDocument = document.getElementById('eventName');
 
 const qrScanApi = async (eventName, decodedText, scanObject) => {
     showLoader.style.display = 'flex';
-    if (eventName === undefined) {
+    if (eventName === 'none') {
         showLoader.style.display = 'none';
         swal({
             title: "Event is not selected",
@@ -86,7 +87,7 @@ docReady(function () {
             // Handle on success condition with the decoded message.
             console.log(`Scan result ${decodedText}`, decodedResult);
             resultContainer.innerText = `Decoded Text : ${decodedText} \n Now searching student in database`;
-            var eventName = "InaugrationSession";
+            const eventName = eventNameDocument.value;
             qrScanApi(eventName, decodedText, scanObject);
         }
     }
