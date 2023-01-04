@@ -47,7 +47,7 @@ const qrScanApi = async (eventName, decodedText, scanObject) => {
                         showLoader.style.display = 'none'
                         swal({
                             title: data.message,
-                            text: `Decoded Text : ${decodedText}`,
+                            text: `Student Name : ${data.studentDetails.studentName} \n Student Email : ${data.studentDetails.studentEmail}`,
                             icon: "success",
                         }).then(() => {
                             scanObject.lastResult = undefined;
