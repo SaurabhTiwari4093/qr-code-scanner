@@ -9,19 +9,16 @@ function docReady(fn) {
     }
 }
 
-const showLoader=document.getElementById('showLoader');
-const showScanner=document.getElementById('showScanner');
+const showLoader = document.getElementById('showLoader');
 
 const qrScanApi = async (data) => {
-    showLoader.style.display='flex';
-    showScanner.style.display='none';
+    showLoader.style.display = 'flex';
     if (data.eventName === '') {
-        showLoader.style.display='none'
+        showLoader.style.display = 'none'
         swal({
             title: "Event is not selected",
+            text: `Decoded Text : ${data.studentEmail}`,
             icon: "info",
-        }).then(()=>{
-            showScanner.style.display='grid';
         })
     }
     else {
@@ -43,21 +40,19 @@ const qrScanApi = async (data) => {
                 .then((data) => {
                     console.log(data)
                     if (data.status === 200) {
-                        showLoader.style.display='none'
+                        showLoader.style.display = 'none'
                         swal({
                             title: data.message,
+                            text: `Decoded Text : ${data.studentEmail}`,
                             icon: "success",
-                        }).then(()=>{
-                            showScanner.style.display='grid';
                         })
                     }
                     else {
-                        showLoader.style.display='none'
+                        showLoader.style.display = 'none'
                         swal({
                             title: data.message,
+                            text: `Decoded Text : ${data.studentEmail}`,
                             icon: "error",
-                        }).then(()=>{
-                            showScanner.style.display='grid';
                         })
                     }
                 })
@@ -80,7 +75,7 @@ docReady(function () {
             console.log(`Scan result ${decodedText}`, decodedResult);
             const requestData = {
                 eventName: "InaugrationSession",
-                studentEmail: decodedText
+                studentEmail: decodedText,
             }
             qrScanApi(requestData);
         }
