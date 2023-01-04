@@ -11,21 +11,24 @@ function docReady(fn) {
 
 const showLoader = document.getElementById('showLoader');
 
-const qrScanApi = async (data) => {
+const qrScanApi = async (eventName, decodedText, scanObject) => {
     showLoader.style.display = 'flex';
-    if (data.eventName === '') {
-        showLoader.style.display = 'none'
+    if (eventName === undefined) {
+        showLoader.style.display = 'none';
         swal({
             title: "Event is not selected",
-            text: `Decoded Text : ${data.studentEmail}`,
+            text: `Decoded Text : ${decodedText}`,
             icon: "info",
+        }).then(() => {
+            scanObject.lastResult = undefined;
+            scanObject.countResults = 0;
         })
     }
     else {
         try {
             const formData = {
-                eventName: data.eventName,
-                studentEmail: data.studentEmail,
+                eventName: eventName,
+                studentEmail: decodedText,
             }
             const requestOptions = {
                 method: "PUT",
@@ -43,16 +46,22 @@ const qrScanApi = async (data) => {
                         showLoader.style.display = 'none'
                         swal({
                             title: data.message,
-                            text: `Decoded Text : ${data.studentEmail}`,
+                            text: `Decoded Text : ${decodedText}`,
                             icon: "success",
+                        }).then(() => {
+                            scanObject.lastResult = undefined;
+                            scanObject.countResults = 0;
                         })
                     }
                     else {
                         showLoader.style.display = 'none'
                         swal({
                             title: data.message,
-                            text: `Decoded Text : ${data.studentEmail}`,
+                            text: `Decoded Text : ${decodedText}`,
                             icon: "error",
+                        }).then(() => {
+                            scanObject.lastResult = undefined;
+                            scanObject.countResults = 0;
                         })
                     }
                 })
@@ -65,19 +74,20 @@ const qrScanApi = async (data) => {
 
 docReady(function () {
     var resultContainer = document.getElementById('qr-reader-results');
-    var lastResult, countResults = 0;
+    const scanObject = {
+        lastResult: undefined,
+        countResults: 0
+    }
     function onScanSuccess(decodedText, decodedResult) {
-        if (decodedText !== lastResult) {
-            ++countResults;
-            lastResult = decodedText;
+        if (decodedText !== scanObject.lastResult) {
+            ++scanObject.countResults;
+            scanObject.lastResult = decodedText;
 
             // Handle on success condition with the decoded message.
             console.log(`Scan result ${decodedText}`, decodedResult);
-            const requestData = {
-                eventName: "InaugrationSession",
-                studentEmail: decodedText,
-            }
-            qrScanApi(requestData);
+            resultContainer.innerText = `Decoded Text : ${decodedText} \n Now searching student in database`;
+            var eventName = "InaugrationSession";
+            qrScanApi(eventName, decodedText, scanObject);
         }
     }
 
