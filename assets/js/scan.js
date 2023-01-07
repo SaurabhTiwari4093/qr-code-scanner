@@ -9,16 +9,26 @@ function docReady(fn) {
     }
 }
 
-const showLoader = document.getElementById('showLoader');
-const eventNameDocument = document.getElementById('eventName');
+var jsonData = [];
+const getJsonData = async () => {
+    await fetch("assets/json/registrations.json")
+        .then((response) => response.json())
+        .then((json) => {
+            console.log(json)
+            jsonData = json;
+        });
+}
 
-const qrScanApi = async (eventName, decodedText, scanObject) => {
+const showLoader = document.getElementById('showLoader');
+getJsonData();
+
+const qrScanApi = async (decodedText, scanObject) => {
     showLoader.style.display = 'flex';
     if (eventName === 'none') {
         showLoader.style.display = 'none';
         swal({
             title: "Event is not selected",
-            text: `Decoded Text : ${decodedText}`,
+            text: `Decoded Text : ${decodedText} \n`,
             icon: "info",
         }).then(() => {
             scanObject.lastResult = undefined;
@@ -27,45 +37,36 @@ const qrScanApi = async (eventName, decodedText, scanObject) => {
     }
     else {
         try {
-            const formData = {
-                eventName: eventName,
-                studentEmail: decodedText,
+            var i;
+            var studentDetails;
+            for (i = 0; i < jsonData.length; i++) {
+                studentDetails = jsonData[i];
+                if (studentDetails.email === decodedText) {
+                    showLoader.style.display = 'none';
+                    break;
+                }
             }
-            const requestOptions = {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData)
-            }
-            const url = `https://becon-edc.azurewebsites.net/api/event/qrScan`;
-            await fetch(url, requestOptions)
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data)
-                    if (data.status === 200) {
-                        showLoader.style.display = 'none'
-                        swal({
-                            title: data.message,
-                            text: `Student Name : ${data.studentDetails.studentName} \n Student Email : ${data.studentDetails.studentEmail}`,
-                            icon: "success",
-                        }).then(() => {
-                            scanObject.lastResult = undefined;
-                            scanObject.countResults = 0;
-                        })
-                    }
-                    else {
-                        showLoader.style.display = 'none'
-                        swal({
-                            title: data.message,
-                            text: `Decoded Text : ${decodedText}`,
-                            icon: "error",
-                        }).then(() => {
-                            scanObject.lastResult = undefined;
-                            scanObject.countResults = 0;
-                        })
-                    }
+            if (i === jsonData.length) {
+                showLoader.style.display = 'none'
+                swal({
+                    title: `Email address not found`,
+                    text: `Decoded text : ${decodedText}`,
+                    icon: "error",
+                }).then(() => {
+                    scanObject.lastResult = undefined;
+                    scanObject.countResults = 0;
                 })
+            }
+            else{
+                swal({
+                    title: `Name : ${studentDetails.name}`,
+                    text: `Email : ${studentDetails.email} \n Mobile : ${studentDetails.mobile} \n Institute : ${studentDetails.institute}`,
+                    icon: "success",
+                }).then(() => {
+                    scanObject.lastResult = undefined;
+                    scanObject.countResults = 0;
+                })
+            }
         }
         catch (error) {
             console.log(error);
@@ -86,9 +87,7 @@ docReady(function () {
 
             // Handle on success condition with the decoded message.
             console.log(`Scan result ${decodedText}`, decodedResult);
-            resultContainer.innerText = `Decoded Text : ${decodedText} \n Now searching student in database`;
-            const eventName = eventNameDocument.value;
-            qrScanApi(eventName, decodedText, scanObject);
+            qrScanApi(decodedText, scanObject);
         }
     }
 
